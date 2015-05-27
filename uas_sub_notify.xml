@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE scenario SYSTEM "sipp.dtd">
+
+<!-- This program is free software; you can redistribute it and/or      -->
+<!-- modify it under the terms of the GNU General Public License as     -->
+<!-- published by the Free Software Foundation; either version 2 of the -->
+<!-- License, or (at your option) any later version.                    -->
+<!--                                                                    -->
+<!-- This program is distributed in the hope that it will be useful,    -->
+<!-- but WITHOUT ANY WARRANTY; without even the implied warranty of     -->
+<!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      -->
+<!-- GNU General Public License for more details.                       -->
+<!--                                                                    -->
+<!-- You should have received a copy of the GNU General Public License  -->
+<!-- along with this program; if not, write to the                      -->
+<!-- Free Software Foundation, Inc.,                                    -->
+<!-- 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA             -->
+<!--                                                                    -->
+<!--                 Sipp default 'uas' scenario.                       -->
+<!--                                                                    -->
+
+<scenario name="Basic UAS responder">
+  <!-- By adding rrs="true" (Record Route Sets), the route sets         -->
+  <!-- are saved and used for following messages sent. Useful to test   -->
+  <!-- against stateful SIP proxies/B2BUAs.                             -->
+  <recv request="SUBSCRIBE"  crlf="true" rrs="true">
+        <!--action>
+            <ereg regexp=".*" search_in="hdr" header=From:" case_indep="true" assign_to="2"/>
+            <ereg regexp=".*" search_in="hdr" header=To:" case_indep="true" assign_to="3"/>
+        </action-->
+  </recv>
+
+  <send>
+    <![CDATA[
+
+      SIP/2.0 200 OK
+      [last_Via:]
+      [last_From:]
+      [last_To:];tag=[pid][call_number]
+      [last_Call-ID:]
+      [last_CSeq:]
+      [last_Expires:]
+      Contact: <sip:[local_ip]:[local_port];transport=[transport]>
+      Content-Length: 0
+
+    ]]>
+  </send>
+
+  <!-- This delay can be customized by the -d command-line option       -->
+  <!-- or by adding a 'milliseconds = "value"' option here.             -->
+  <pause milliseconds="59900"/>
+
+  <!--send>
+    <![CDATA[
+
+      NOTIFY [next_url] SIP/2.0
+		Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      To: [$2]
+      From: [$3];tag=[pid][call_number]
+      [last_Call-ID:]
+      [last_Event:]
+      [last_Max-Forwards:]
+      CSeq: 101 NOTIFY
+      Subscription-State: active
+		Content-Type: application/plain
+      Content-Length: [len]
+
+      John Doe
+
+
+    ]]>
+  </send>
+
+  <recv response="100"
+        optional="true">
+  </recv-->
+
+  <recv response="200" crlf="true">
+  </recv-->
+
+  <!-- Keep the call open for a while in case the 200 is lost to be     -->
+  <!-- able to retransmit it if we receive the BYE again.               -->
+  <pause milliseconds="1000"/>
+
+
+  <!-- definition of the response time repartition table (unit is ms)   -->
+  <ResponseTimeRepartition value="10, 20, 30, 40, 50, 100, 150, 200"/>
+
+  <!-- definition of the call length repartition table (unit is ms)     -->
+  <CallLengthRepartition value="10, 50, 100, 500, 1000, 5000, 10000"/>
+
+</scenario>
+
