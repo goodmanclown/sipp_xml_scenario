@@ -23,30 +23,20 @@
   <!-- By adding rrs="true" (Record Route Sets), the route sets         -->
   <!-- are saved and used for following messages sent. Useful to test   -->
   <!-- against stateful SIP proxies/B2BUAs.                             -->
-  <recv request="REGISTER">
+  <recv request="OPTIONS">
   </recv>
 
   <send>
     <![CDATA[
 
-      SIP/2.0 200 OK
+      SIP/2.0 503 Server Unavailable
       [last_Via:]
       [last_From:]
       [last_To:]
       [last_Call-ID:]
       [last_CSeq:]
-      [last_Contact:];expires=1200
-      Expires: 1200
-      Allow: INVITE,REGISTER,ACK,BYE,CANCEL,OPTIONS,MESSAGE
-      Content-Type: application/x-tia-p25-issi
-      Content-Disposition: session;handling=required
-      Content-Length: 100
-
-      g-agroup:AB999747E297
-      g-rfhangt:10
-      g-ccsetupT:32767
-      g-intmode:2
-      g-man90-alias:NGI-FDMA-B7-E293
+      Contact: <sip:[local_ip]:[local_port];transport=[transport]>
+      Content-Length: 0
 
     ]]>
   </send>
